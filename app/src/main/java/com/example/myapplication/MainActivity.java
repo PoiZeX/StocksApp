@@ -12,11 +12,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import android.text.TextWatcher;
 import android.text.Editable;
 import android.widget.AdapterView;
@@ -48,24 +52,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        init();
+        initListeners();
+        // fetch stock symbols when the activity starts
+        fetchStockSymbols();
+
+
+    }
+
+    private void init() {
         // find view by id section
         buttonAddStock = findViewById(R.id.buttonAddStock);
         tableLayout = findViewById(R.id.tableLayout);
         textView = findViewById(R.id.testView);
         arrayList = new ArrayList<>();
+    }
 
-        // fetch stock symbols when the activity starts
-        fetchStockSymbols();
 
-        buttonAddStock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String stockName = textView.getText().toString().toUpperCase();
-                if (!stockName.isEmpty()) {
-                    new FetchStockQuoteTask().execute(stockName);
-                }
-            }
-        });
+    private void initListeners() {
+//        buttonAddStock.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String stockName = textView.getText().toString().toUpperCase();
+//                if (!stockName.isEmpty()) {
+//                    new FetchStockQuoteTask().execute(stockName);
+//                }
+//            }
+//        });
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -94,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                    }
                 });
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-
     }
 
     // fetch stock symbols from the API
