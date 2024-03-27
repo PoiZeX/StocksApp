@@ -56,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
         init();
         initListeners();
         // fetch stock symbols when the activity starts
-        fetchStockSymbols();
-
-
+//        fetchStockSymbols();
+//        StockManager.getInstance().getStockData();
+//        StockManager.getInstance().getAllStocksSymbols();
+        for (String symbol : StockManager.getInstance().getAllStocksSymbols()) {
+            arrayList.add(symbol);
+        }
     }
 
     private void init() {
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initListeners() {
+
 //        buttonAddStock.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -118,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         textView.setText(adapter.getItem(position));
                         dialog.dismiss();
-                        // add the stock auto...
-                        buttonAddStock.performClick();
+                        onItemSelected();
                     }
                 });
 
@@ -128,6 +131,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void onItemSelected(){
+        // when clicking on item from combobox
+        //                        buttonAddStock.performClick();
+        String stockName = textView.getText().toString().toUpperCase();
+        if (!stockName.isEmpty()) {
+            Stock s = StockManager.getInstance().getStockData(stockName);
+            currentStock = s.getSymbol();
+            if (!isStockDisplayed(currentStock)) {
+                addStockToTable(currentStock, s.getPrice(), s.getDailyChange());
+            } else {
+                showToast("Stock already exists in the table");
+            }
+        }
+    }
     // fetch stock symbols from the API
     private void fetchStockSymbols() {
         new AsyncTask<Void, Void, String>() {
