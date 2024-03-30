@@ -13,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockManager {
+    private ArrayList<StockObserver> observers; // list of observers
 
     private static StockManager instance;
     private final String apiKey = "cnjibnhr01qmfbtbdcggcnjibnhr01qmfbtbdch0";
 
     private StockManager() {
+        observers = new ArrayList<>();
+
     }
 
     public static synchronized StockManager getInstance() {
@@ -27,30 +30,8 @@ public class StockManager {
         return instance;
     }
 
-//    public void fetchStockSymbols(StockListener listener) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<String> symbols = fetchStockSymbolsFromAPI();
-//                if (symbols != null) {
-//                    for (String symbol : symbols) {
-//                        listener.onStockFetched(symbol, -1, -1);
-//                    }
-//                } else {
-//                    listener.onStockFetchFailed("Failed to fetch stock symbols.");
-//                }
-//            }
-//        }).start();
-//    }
 
-//    protected List<String> getAllStocksSymbols() {
-//        String stockSymbolsJson = getAllStocksJson();
-//        if (stockSymbolsJson != null) {
-//            return stocksJsonToList(stockSymbolsJson);
-//        }
-//        return null;
-//    }
-
+    //region Get All Stocks
     protected List<String> getAllStocksSymbols() {
         final List<String> symbols = new ArrayList<>();
         Thread thread = new Thread(new Runnable() {
@@ -123,13 +104,15 @@ public class StockManager {
         return symbols;
     }
 
+    //endregion
 
-    protected Stock getStockData(String symbol) {
+    //region Get Single Stock data
+    protected StockModel getStockData(String symbol) {
         String quoteJsonString = getSingleStockDataJson(symbol);
         if (quoteJsonString != null)
             return parseStockQuote(symbol, quoteJsonString);
         else
-            return new Stock("error", -1, -1);
+            return new StockModel("error", -1, -1);
 
     }
 
@@ -184,17 +167,17 @@ public class StockManager {
         return quoteJsonString.toString();
     }
 
-    private Stock parseStockQuote(String symbol, String quoteJsonString) {
-        final Stock[] res = new Stock[1];
+    private StockModel parseStockQuote(String symbol, String quoteJsonString) {
+        final StockModel[] res = new StockModel[1];
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     JSONObject quoteJson = new JSONObject(quoteJsonString);
-                    res[0] = new Stock(symbol, quoteJson.getDouble("c"), quoteJson.getDouble("d"));
+                    res[0] = new StockModel(symbol, quoteJson.getDouble("c"), quoteJson.getDouble("d"));
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    res[0] = new Stock("Error", -1, -1);
+                    res[0] = new StockModel("Error", -1, -1);
                 }
             }
         });
@@ -206,4 +189,34 @@ public class StockManager {
         }
         return res[0];
     }
+
+    //endregion
+
+    //region Stock observer pattern
+    public void addObserver(StockObserver observer) {
+        //sijmple method to add observer
+        observers.add(observer);
+    }
+
+    public void removeObserver(StockObserver observer) {
+        //simple method to remove observer
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(StockModel stock) {
+        // uses (from diagram)
+        // notify to my  registered (maincontroller and graphcontroller)
+        for (StockObserver observer : observers) {
+            observer.onStockDataChanged(stock);
+        }
+    }
+
+    //endregion stock observer
+
+    public void refreshStockData(String symbol) {
+        // get data and notify
+        StockModel updatedStock = getStockData(symbol);
+        notifyObservers(updatedStock);
+    }
+
 }

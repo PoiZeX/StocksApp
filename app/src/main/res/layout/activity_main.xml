@@ -1,4 +1,4 @@
-<!-- activity_main.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,25 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-
-<!--    <EditText-->
-<!--        android:id="@+id/editTextStockName"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Enter Stock Name"/>-->
-
     <TextView
+        android:id="@+id/testView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/testView"
         android:layout_marginTop="20dp"
         android:hint="Select Stock"
         android:padding="12dp"
         android:gravity="center_vertical"
         android:drawableEnd="@drawable/baseline_keyboard_arrow_down_24"
-        android:background="@android:drawable/editbox_background"
-        />
+        android:background="@android:drawable/editbox_background" />
 
     <Button
         android:id="@+id/buttonAddStock"
@@ -32,12 +23,7 @@
         android:layout_marginTop="10pt"
         android:layout_marginStart="60pt"
         android:layout_height="wrap_content"
-        android:text="Add Stock"/>
-
-<!--    <Spinner-->
-<!--        android:id="@+id/spinnerStockSymbols"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"/>-->
+        android:text="Add Stock" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -60,21 +46,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stock Symbol"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textViewPriceHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Price $"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textViewDailyChangeHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Daily Change"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </TableRow>
 
