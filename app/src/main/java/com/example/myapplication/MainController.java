@@ -16,9 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Handler;
 import android.os.Looper;
+import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +43,7 @@ public class MainController extends AppCompatActivity implements StockObserver  
 
     private StockManager stockManager;  // MODEL
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private static final long REFRESH_INTERVAL = 5*1000; // 5 sec for now
+    private static final long REFRESH_INTERVAL = 60*1000; // 60 sec for now
 
 
     @Override
@@ -179,14 +182,16 @@ public class MainController extends AppCompatActivity implements StockObserver  
         builder.setItems(new CharSequence[]{"Show Graph", "Remove Stock"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String selectedSymbolStock = ((TextView) row.getChildAt(0)).getText().toString();
                 switch (which) {
                     case 0:
-                        // go to graph
+                        stockManager.currentStock = selectedSymbolStock;
+                        Intent intent = new Intent(MainController.this, GraphController.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         // remove stock
-                        String symbolToRemove = ((TextView) row.getChildAt(0)).getText().toString();
-                        removeStockConfirmation(symbolToRemove, row);
+                        removeStockConfirmation(selectedSymbolStock, row);
                         break;
                 }
             }

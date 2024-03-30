@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewStockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Stock Name"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewStockName"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonIntraday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intraday" />
+
+        <Button
+            android:id="@+id/buttonDaily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily" />
+
+        <Button
+            android:id="@+id/buttonWeekly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weekly" />
+
+        <Button
+            android:id="@+id/buttonMonthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly" />
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/buttonLayout"
+        android:textColor="@android:color/white"
+        android:padding="10dp"
+        tools:ignore="MissingClass" />
+
+</RelativeLayout>

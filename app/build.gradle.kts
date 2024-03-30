@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url = uri("https://jitpack.io") }
+    }
+    dependencies {
+        // Add any build script dependencies here if needed
+    }
+}
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -26,6 +35,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -65,4 +75,5 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

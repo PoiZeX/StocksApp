@@ -17,6 +17,11 @@ public class StockManager {
 
     private static StockManager instance;
     private final String apiKey = "cnjibnhr01qmfbtbdcggcnjibnhr01qmfbtbdch0";
+    private final String apiKey_GRAPH = "7G1FM8ZRXAL6DQYD";
+
+    public String currentStock;  // store the current selected stock
+
+    //https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=7G1FM8ZRXAL6DQYD
 
     private StockManager() {
         observers = new ArrayList<>();
