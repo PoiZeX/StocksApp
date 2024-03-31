@@ -18,14 +18,11 @@
             android:name=".GraphController"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
-        <activity
-            android:name=".GraphActivity"
-            android:exported="false"
-            android:label="@string/title_activity_graph"
-            android:theme="@style/Theme.MyApplication" />
+
         <activity
             android:name=".MainController"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

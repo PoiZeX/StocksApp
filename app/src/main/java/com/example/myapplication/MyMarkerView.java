@@ -9,6 +9,8 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MyMarkerView extends MarkerView {
 
@@ -23,7 +25,9 @@ public class MyMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setText(format.format(e.getY()) + "$");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        tvContent.setText(format.format(e.getY()) + "$" + ", " + dateFormat.format(new Date((long) e.getX())));
 
         super.refreshContent(e, highlight);
     }

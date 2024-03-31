@@ -20,6 +20,7 @@ public class StockManager {
     private final String apiKey_GRAPH = "7G1FM8ZRXAL6DQYD";
 
     public String currentStock;  // store the current selected stock
+    public StockModel currentStockObj;
 
     //https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=7G1FM8ZRXAL6DQYD
 
@@ -94,6 +95,22 @@ public class StockManager {
         return symbols;
     }
 
+//    private void getAll(){
+//        String apiUrl = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=" + apiKey;
+//
+//        // get data
+//        String buffer = ApiCalls.getBuffer(apiUrl, new DataProcessor() {
+//            @Override
+//            public void processData(String bufferData) {
+//
+//            }
+//        });
+//
+//
+//        // process data
+//
+//        // do something
+//    }
     public List<String> stocksJsonToList(String stockSymbolsJson) {
         List<String> symbols = new ArrayList<>();
         try {

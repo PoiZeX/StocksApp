@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_margin="10dp"
     android:layout_height="match_parent">
 
     <TextView
@@ -13,42 +14,75 @@
         android:textSize="20sp" />
 
     <LinearLayout
-        android:id="@+id/buttonLayout"
+        android:id="@+id/buttonLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewStockName"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/buttonIntraday"
-            android:layout_width="wrap_content"
+            android:id="@+id/button1D"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Intraday" />
+            android:layout_weight="1"
+            android:text="1D" />
 
         <Button
-            android:id="@+id/buttonDaily"
-            android:layout_width="wrap_content"
+            android:id="@+id/button5D"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Daily" />
+            android:layout_weight="1"
+            android:text="5D" />
 
         <Button
-            android:id="@+id/buttonWeekly"
-            android:layout_width="wrap_content"
+            android:id="@+id/button1M"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Weekly" />
+            android:layout_weight="1"
+            android:text="1M" />
 
         <Button
-            android:id="@+id/buttonMonthly"
-            android:layout_width="wrap_content"
+            android:id="@+id/button6M"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Monthly" />
+            android:layout_weight="1"
+            android:text="6M" />
+
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/buttonLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLayout1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button1Y"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1Y" />
+
+        <Button
+            android:id="@+id/button5Y"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="5Y" />
+
+        <Button
+            android:id="@+id/buttonMAX"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="MAX" />
+    </LinearLayout>
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/buttonLayout"
+        android:layout_below="@id/buttonLayout2"
         android:textColor="@android:color/white"
         android:padding="10dp"
         tools:ignore="MissingClass" />

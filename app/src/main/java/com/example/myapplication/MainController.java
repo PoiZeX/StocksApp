@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,8 +31,6 @@ import java.util.Set;
 public class MainController extends AppCompatActivity implements StockObserver  {
 
     //region binding
-    private EditText editTextStockName;
-    private Button buttonAddStock;
     private TableLayout tableLayout;
     private String currentStock = "";
     private Set<String> displayedStocks = new HashSet<>();
@@ -62,7 +61,6 @@ public class MainController extends AppCompatActivity implements StockObserver  
     //region init
     private void init() {
         // attach view by id section
-        buttonAddStock = findViewById(R.id.buttonAddStock);
         tableLayout = findViewById(R.id.tableLayout);
         textView = findViewById(R.id.testView);
         arrayList = new ArrayList<>();
@@ -77,6 +75,7 @@ public class MainController extends AppCompatActivity implements StockObserver  
         stockManager.addObserver(this);
 
     }
+
 
     private void initListeners() {
 
@@ -100,17 +99,13 @@ public class MainController extends AppCompatActivity implements StockObserver  
 
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {  }
 
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
-                    }
+                    public void onTextChanged(CharSequence s, int start, int before, int count) { adapter.getFilter().filter(s); }
 
                     @Override
-                    public void afterTextChanged(Editable s) {
-                    }
+                    public void afterTextChanged(Editable s) {       }
                 });
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,22 +140,35 @@ public class MainController extends AppCompatActivity implements StockObserver  
         }
     }
 
-
+//    @Override
+//    public void processData(String bufferData){
+//        // must implement the Strategy
+//
+//        // get buffer to
+//
+//        // add stock to table
+//    }
     private void addStockToTable(String symbol, double price, double dailyChange) {
         // creating new row and new textview for each column (as tamir wants..)
         TableRow row = new TableRow(this);
 
         TextView symbolTextView = new TextView(this);
         symbolTextView.setText(symbol);
+        symbolTextView.setTextSize(18);
         row.addView(symbolTextView);
 
         TextView priceTextView = new TextView(this);
         priceTextView.setText(String.valueOf(price));
+        priceTextView.setTextSize(18);
         row.addView(priceTextView);
 
         TextView dailyChangeTextView = new TextView(this);
         dailyChangeTextView.setText(String.valueOf(dailyChange));
+        dailyChangeTextView.setTextSize(18);
+        dailyChangeTextView.setTextColor(dailyChange > 0 ? Color.GREEN : Color.RED);
         row.addView(dailyChangeTextView);
+
+        row.setPadding(0, 10, 0, 0);
 
         // adding click listener to remove the stock
         row.setOnClickListener(
@@ -228,7 +236,7 @@ public class MainController extends AppCompatActivity implements StockObserver  
 
     //endregion
 
-    // ----- data refresh -----
+    //region data refresh
     @Override
     public void onStockDataChanged(StockModel stock) {
         // handle the updated stock data
@@ -248,11 +256,11 @@ public class MainController extends AppCompatActivity implements StockObserver  
     }
 
     private void refreshStockDataForAllDisplayedStocks() {
-        for (String symbol : displayedStocks) {
+        for (String symbol : displayedStocks)
             stockManager.refreshStockData(symbol);
-        }
     }
 
+//endregion
 
     private void updateStockDataInTable(StockModel stock) {
         //find
@@ -264,11 +272,11 @@ public class MainController extends AppCompatActivity implements StockObserver  
             // finding by index (that i know its constant) instead of saving instances of rows...
             TextView priceTextView = (TextView) rowToUpdate.getChildAt(1);
             TextView dailyChangeTextView = (TextView) rowToUpdate.getChildAt(2);
+            dailyChangeTextView.setTextColor(stock.getDailyChange() > 0 ? Color.GREEN : Color.RED);
 
             // updating
-            //TODO: REMOVE the plus minus 1 (i did it just to see change)
-            priceTextView.setText(String.valueOf(stock.getPrice()-1));
-            dailyChangeTextView.setText(String.valueOf(stock.getDailyChange()+1));
+            priceTextView.setText(String.valueOf(stock.getPrice()));
+            dailyChangeTextView.setText(String.valueOf(stock.getDailyChange()));
 
         }
     }

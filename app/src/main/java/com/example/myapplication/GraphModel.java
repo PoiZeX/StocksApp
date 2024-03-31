@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.github.mikephil.charting.data.Entry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,8 +18,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -27,8 +32,8 @@ public class GraphModel {
 
     private static GraphModel instance;
 
-    private static final String TAG = GraphModel.class.getSimpleName();
-    String apiKey = "D370QTABFLDJH2E6";
+//    String apiKey = "D370QTABFLDJH2E6"; // https://www.alphavantage.co/support/#api-key
+    String apiKey = "lE8wpwBng_ppahJDaKI6kPxFWipws82l";  //https://polygon.io/docs/stocks/get_v2_aggs_ticker__stocksticker__range__multiplier___timespan___from___to
     String baseApiUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_";
 
     private GraphModel() {
@@ -42,18 +47,18 @@ public class GraphModel {
         return instance;
     }
 
-    private List<Entry>  fetchStockData(final String symbol, final String timeframe) {
+    private List<Entry>  fetchStockData(String apiUrl) {
         final JSONObject[] jsonResponse = {null};
-        String temp = timeframe.toUpperCase();
-        if (timeframe.equals("2year") || timeframe.equals("3year") || timeframe.equals("all")) {
-            temp = "Monthly"; //because its custom. for me
-        }
-        final String timeframeToAPI = temp;
+//        String temp = timeframe.toUpperCase();
+//        if (timeframe.equals("2year") || timeframe.equals("3year") || timeframe.equals("all")) {
+//            temp = "Monthly"; //because its custom. for me
+//        }
+//        final String timeframeToAPI = temp;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String apiUrl = baseApiUrl + timeframeToAPI + "&symbol=" + symbol + "&apikey=" + apiKey;
+//                String apiUrl = baseApiUrl + timeframeToAPI + "&symbol=" + symbol + "&apikey=" + apiKey;
 
                 try {
                     URL url = new URL(apiUrl);
@@ -102,7 +107,7 @@ public class GraphModel {
         /// parse
 
         try{
-            return parseStockData(jsonResponse[0], timeframe);
+            return parseStockData(jsonResponse[0]);
 
         }
         catch (Exception e)
@@ -112,22 +117,22 @@ public class GraphModel {
     }
 
 
-    private List<Entry> parseStockData(JSONObject jsonData, String timeframe) throws JSONException {
+    private List<Entry> parseStockData(JSONObject jsonData) throws JSONException {
         List<Entry> entries = new ArrayList<>();
-        String finalTimeframe = timeframe.substring(0, 1).toUpperCase() + timeframe.substring(1); // make sure
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    JSONObject timeSeries = jsonData.getJSONObject(finalTimeframe +" Time Series");
-                    Iterator<String> keys = timeSeries.keys();
-                    int index = 0;
-                    while (keys.hasNext() && index < numOfEntriesToGet(timeframe)) {
-                        String date = keys.next();
-                        JSONObject data = timeSeries.getJSONObject(date);
-                        float price = Float.parseFloat(data.getString("4. close")); // i think
-                        entries.add(new Entry(index++, price));
+
+                    JSONArray resultsArray = jsonData.getJSONArray("results");
+
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject result = resultsArray.getJSONObject(i);
+                        float price = (float) result.getDouble("c");
+                        long timestamp = result.getLong("t");
+                        // i will handle timestamp later
+                        entries.add(new Entry(timestamp, price));
                     }
 
                 } catch (JSONException e) {
@@ -145,26 +150,61 @@ public class GraphModel {
 
     }
 
-private  int numOfEntriesToGet(String timeframe){
-    timeframe = timeframe.toLowerCase();
-        switch(timeframe){
-            case "weekly":
-                return 4; // for last month
-            case "monthly":
-                return 12; // for last year
-            case "2year":
-                return 24;
-            case "3year":
-                return 36;
 
 
-        }
-        return 12*100; // all time...
-    }
     public List<Entry> listForChart(String symbol, String timeframe)  {
+        String timeSpan;
+        String fromDate;
+        String toDate;
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        toDate = dateFormat.format(today);
+
+        switch(timeframe) {
+            case "1D":
+                timeSpan = "hour";
+                calendar.add(Calendar.DAY_OF_YEAR, -1);
+                break;
+            case "5D":
+                timeSpan = "day";
+                calendar.add(Calendar.DAY_OF_YEAR, -5);
+                break;
+            case "1M":
+                timeSpan = "day";
+                calendar.add(Calendar.MONTH, -1);
+                break;
+            case "6M":
+                timeSpan = "day";
+                calendar.add(Calendar.MONTH, -6);
+                break;
+            case "1Y":
+                timeSpan = "month";
+                calendar.add(Calendar.YEAR, -1);
+                break;
+            case "5Y":
+                timeSpan = "month";
+                calendar.add(Calendar.YEAR, -5);
+                break;
+            default:
+                //max
+                timeSpan = "month";
+                calendar.add(Calendar.YEAR, -10);
+                break;
+        }
+        fromDate = dateFormat.format(calendar.getTime());
+
+        String apiUrl = "https://api.polygon.io/v2/aggs/ticker/" +
+                symbol + "/range/1/" + timeSpan + "/" + fromDate + "/" + toDate +
+                "?adjusted=true&sort=asc&limit=50000&apiKey=" + apiKey;
+
+
+
+
         List<Entry> res = new ArrayList<>();
         try {
-            return fetchStockData(symbol, timeframe);
+            return fetchStockData(apiUrl);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -172,5 +212,7 @@ private  int numOfEntriesToGet(String timeframe){
         }
 
     }
+
+
 
 }
